@@ -30,18 +30,18 @@
 import ratingIcon from "../assets/Rating.svg";
 import moviePic from "../assets/sonic3.jpg";
 
-const MovieCard = () => {
+const MovieCard = ({ title }) => {
   return (
-    <div className="movie-card bg-dark-100 flex h-80 flex-col overflow-hidden rounded-2xl px-4 py-3 text-white">
-      <div className="movie-img h-3/4 overflow-hidden rounded-2xl">
+    <div className="movie-card bg-dark-100 flex flex-col gap-2 overflow-hidden rounded-2xl px-4 py-3 text-white">
+      <div className="movie-img h-60 overflow-hidden rounded-2xl">
         <img
           src={moviePic}
           alt="sonic3 image"
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="movie-content flex flex-grow flex-col justify-end gap-1">
-        <h3 className="text-[16px] font-bold">Sonic 3</h3>
+      <div className="movie-content flex flex-col justify-end gap-3">
+        <h3 className="text-[16px] font-bold">{title}</h3>
         <div className="movie-details flex items-center gap-2">
           <span className="rating-icon">
             <img src={ratingIcon} alt="rating icon" />

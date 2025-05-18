@@ -27,8 +27,13 @@ function App() {
             <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
               Popular Movies
             </h2>
-            <div className="popular-movies grid h-200 grid-cols-4">
-              <MovieCard />
+            <div className="popular-movies grid grid-cols-4 gap-5">
+              <MovieCard title="Sonic 3" />
+              <MovieCard title="Sonic 3 Sonic 3 Sonic 3 Sonic 3" />
+              <MovieCard title="Sonic 3" />
+              <MovieCard title="Sonic 3" />
+              <MovieCard title="Sonic 3" />
+              <MovieCard title="Sonic 3" />
             </div>
           </main>
         </div>
