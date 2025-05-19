@@ -30,3 +30,10 @@
 @utility text-gradient {
   @apply bg-linear-to-r from-[#D6C7FF] to-[#AB8BFF] bg-clip-text text-transparent;
 }
+
+@utility fancy-text {
+  -webkit-text-stroke: 2px rgba(206, 206, 251, 0.4);
+  font-size: 140px;
+  font-family: "DM Sans", serif;
+  color: rgba(206, 206, 251, 0.1);
+}
