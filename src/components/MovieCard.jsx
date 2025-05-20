@@ -1,53 +1,66 @@
-// import ratingIcon from "../assets/Rating.svg";
-// import moviePic from "../assets/sonic3.jpg";
-
-// const MovieCard = () => {
-//   return (
-//     <div className="bg-dark-100 flex h-96 flex-col gap-3 overflow-hidden rounded-2xl px-5 py-4 text-white">
-//       <div className="flex-grow overflow-hidden rounded-2xl">
-//         <img
-//           src={moviePic}
-//           alt="sonic3 image"
-//           className="h-full w-full object-cover"
-//         />
-//       </div>
-//       <div className="flex flex-col gap-2">
-//         <h3 className="text-lg font-bold">Sonic 3</h3>
-//         <div className="flex items-center gap-2">
-//           <span className="rating-icon">
-//             <img src={ratingIcon} alt="rating icon" className="h-5 w-5" />
-//           </span>
-//           <span className="font-bold">4.5</span>
-//           <span className="text-gray-400">• Action • Movie</span>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MovieCard;
-
+import { useEffect, useState } from "react";
 import ratingIcon from "../assets/Rating.svg";
-import moviePic from "../assets/sonic3.jpg";
 
-const MovieCard = ({ title }) => {
+const MovieCard = ({
+  id,
+  title,
+  releaseDate,
+  overview,
+  rating,
+  posterPath,
+}) => {
+  const [genresList, setGenresList] = useState([]);
+
+  const fetchGenres = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_TMDB_MOVIES_BASE_URL}/movie/${id}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+          },
+        },
+      );
+      const data = await res.json();
+      setGenresList(data.genres);
+    } catch (error) {
+      console.error("Error fetching genres:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGenres();
+  }, [id]);
+
   return (
     <div className="movie-card bg-dark-100 flex flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white">
       <div className="movie-img h-60 overflow-hidden rounded-2xl">
         <img
-          src={moviePic}
-          alt="sonic3 image"
+          src={posterPath}
+          alt="movie poster"
           className="h-full w-full object-cover"
         />
       </div>
       <div className="movie-content flex flex-col justify-end gap-3">
-        <h3 className="text-[16px] font-bold">{title}</h3>
-        <div className="movie-details flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <h3 className="text-[16px] font-bold">{title}</h3>
+          <span className="ml-1 text-[8px] text-gray-100">{releaseDate}</span>
+        </div>
+        <div className="movie-details flex flex-wrap items-center gap-2">
           <span className="rating-icon">
             <img src={ratingIcon} alt="rating icon" />
           </span>
-          <span className="rating font-bold">4.5</span>
-          <span className="movie-category text-gray-100">• Action • Movie</span>
+          <span className="rating font-bold">{rating}</span>
+          {genresList.map((genre) => (
+            <span key={genre.id} className="genre text-[14px] text-gray-100">
+              {genre.name} •
+            </span>
+          ))}
+          <span className="movie-category text-[14px] text-gray-100">
+            Movie
+          </span>
         </div>
       </div>
     </div>

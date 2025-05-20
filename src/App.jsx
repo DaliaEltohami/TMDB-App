@@ -6,21 +6,58 @@ import MovieCard from "./components/MovieCard";
 import TrendingMovieCard from "./components/TrendingMovieCard";
 import MoviePagination from "./components/MoviePagination";
 import { useState } from "react";
+import { useEffect } from "react";
+
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const TMDB_MOVIES_API_URL = import.meta.env.VITE_TMDB_MOVIES_BASE_URL;
+
+const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization: `Bearer ${TMDB_API_KEY}`,
+  },
+};
 
 function App() {
+  console.log(TMDB_API_KEY, TMDB_MOVIES_API_URL);
   const [movies, setMovies] = useState([]);
 
   const fetchMovies = async () => {
-    const res = await fetch();
+    try {
+      const res = await fetch(
+        `${TMDB_MOVIES_API_URL}/discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&page=1`,
+        API_OPTIONS,
+      );
+      // Check if the response is ok
+      // If not, throw an error
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      console.log(res);
+
+      // If the response is ok, parse the JSON
+      // and set the movies state to the results from the API
+
+      const data = await res.json();
+
+      console.log(data);
+
+      if (data.results.length === 0) {
+        throw new Error("No movies found");
+      }
+
+      setMovies(data.results);
+    } catch (error) {
+      // If there is an error, log it to the console
+      console.error("Error fetching movies:", error);
+    }
   };
 
   useEffect(() => {
-    const res = fetch();
-
-    return () => {
-      second;
-    };
-  }, [third]);
+    fetchMovies();
+  }, []);
 
   return (
     <>
@@ -59,12 +96,17 @@ function App() {
               Popular Movies
             </h2>
             <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              <MovieCard title="Sonic 3" />
-              <MovieCard title="Sonic 3 Sonic 3 Sonic 3 Sonic 3" />
-              <MovieCard title="Sonic 3" />
-              <MovieCard title="Sonic 3" />
-              <MovieCard title="Sonic 3" />
-              <MovieCard title="Sonic 3" />
+              {movies.map((movie) => (
+                <MovieCard
+                  key={movie.id}
+                  id={movie.id}
+                  title={movie.title}
+                  releaseDate={movie.release_date}
+                  overview={movie.overview}
+                  rating={movie.vote_average}
+                  posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                />
+              ))}
             </div>
           </div>
           <div className="pagination p-8">
