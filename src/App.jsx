@@ -4,8 +4,24 @@ import "./App.css";
 import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
 import TrendingMovieCard from "./components/TrendingMovieCard";
+import MoviePagination from "./components/MoviePagination";
+import { useState } from "react";
 
 function App() {
+  const [movies, setMovies] = useState([]);
+
+  const fetchMovies = async () => {
+    const res = await fetch();
+  };
+
+  useEffect(() => {
+    const res = fetch();
+
+    return () => {
+      second;
+    };
+  }, [third]);
+
   return (
     <>
       <div className="bg-pattern-bg absolute top-0 z-0 h-screen w-screen bg-cover bg-center"></div>
@@ -25,11 +41,11 @@ function App() {
           <Search />
         </header>
         <main className="mt-10 flex flex-col gap-7 px-8 sm:mt-15">
-          <div className="trendings mt-10 flex flex-col gap-10 px-8 sm:mt-15">
+          <div className="trendings mt-10 flex flex-col gap-10 p-8 sm:mt-15">
             <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
               Trending Movies
             </h2>
-            <div className="trending-movies grid grid-cols-1 gap-5 md:grid-cols-3 2xl:grid-cols-6">
+            <div className="trending-movies grid grid-cols-1 justify-items-center gap-5 md:grid-cols-3 md:justify-items-start 2xl:grid-cols-6">
               <TrendingMovieCard />
               <TrendingMovieCard />
               <TrendingMovieCard />
@@ -38,11 +54,11 @@ function App() {
               <TrendingMovieCard />
             </div>
           </div>
-          <div className="popular mt-10 flex flex-col gap-10 px-8 sm:mt-15">
+          <div className="popular mt-10 flex flex-col gap-10 p-8 sm:mt-15">
             <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
               Popular Movies
             </h2>
-            <div className="popular-movies grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <MovieCard title="Sonic 3" />
               <MovieCard title="Sonic 3 Sonic 3 Sonic 3 Sonic 3" />
               <MovieCard title="Sonic 3" />
@@ -50,6 +66,9 @@ function App() {
               <MovieCard title="Sonic 3" />
               <MovieCard title="Sonic 3" />
             </div>
+          </div>
+          <div className="pagination p-8">
+            <MoviePagination />
           </div>
         </main>
       </div>

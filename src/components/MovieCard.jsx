@@ -32,7 +32,7 @@ import moviePic from "../assets/sonic3.jpg";
 
 const MovieCard = ({ title }) => {
   return (
-    <div className="movie-card bg-dark-100 flex flex-col gap-2 overflow-hidden rounded-2xl px-4 py-3 text-white">
+    <div className="movie-card bg-dark-100 flex flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white">
       <div className="movie-img h-60 overflow-hidden rounded-2xl">
         <img
           src={moviePic}
