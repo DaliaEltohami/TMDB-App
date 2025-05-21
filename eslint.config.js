@@ -38,7 +38,7 @@ export default [
     },
     settings: {
       react: {
-        version: "detect", // ✅ helps auto-detect React version
+        version: "detect",
       },
     },
   },

@@ -5,11 +5,14 @@ import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
 import TrendingMovieCard from "./components/TrendingMovieCard";
 import MoviePagination from "./components/MoviePagination";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { BeatLoader } from "react-spinners";
 
 const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const TMDB_MOVIES_API_URL = import.meta.env.VITE_TMDB_MOVIES_BASE_URL;
+
+const rootStyles = getComputedStyle(document.documentElement);
+const color = rootStyles.getPropertyValue("--color-light-100").trim();
 
 const API_OPTIONS = {
   method: "GET",
@@ -20,44 +23,117 @@ const API_OPTIONS = {
 };
 
 function App() {
-  console.log(TMDB_API_KEY, TMDB_MOVIES_API_URL);
   const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [debouncedPageNumber, setDebouncedPageNumber] = useState(1);
 
   const fetchMovies = async () => {
+    console.log("pageNumber", pageNumber);
+    setLoading(true);
+    setError("");
     try {
       const res = await fetch(
-        `${TMDB_MOVIES_API_URL}/discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&page=1`,
+        `${TMDB_MOVIES_API_URL}/discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&page=${debouncedPageNumber}`,
         API_OPTIONS,
       );
       // Check if the response is ok
       // If not, throw an error
       if (!res.ok) {
+        setError("Error Loading Movies!!!");
         throw new Error("Network response was not ok");
       }
-
-      console.log(res);
 
       // If the response is ok, parse the JSON
       // and set the movies state to the results from the API
 
       const data = await res.json();
-
-      console.log(data);
+      console.log("data", data);
 
       if (data.results.length === 0) {
+        setError("No Movies To Show");
         throw new Error("No movies found");
       }
 
-      setMovies(data.results);
+      const MoviesWithGenres = await Promise.all(
+        data.results.map(async (movie) => {
+          try {
+            const movieDetailsRes = await fetch(
+              `${TMDB_MOVIES_API_URL}/movie/${movie.id}`,
+              {
+                method: "GET",
+                headers: {
+                  accept: "application/json",
+                  Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+                },
+              },
+            );
+
+            if (!movieDetailsRes.ok) {
+              throw new Error("Response was not Ok!!!");
+            }
+
+            const movieDetails = await movieDetailsRes.json();
+
+            return { ...movie, genres: movieDetails.genres || [] };
+          } catch (error) {
+            console.error("Error Fetching Genres For Movie", movie.id);
+            return { ...movie, genres: [] };
+          }
+        }),
+      );
+
+      setMovies(MoviesWithGenres);
     } catch (error) {
       // If there is an error, log it to the console
+      setError("Error Loading Movies!!!");
       console.error("Error fetching movies:", error);
+    } finally {
+      setTimeout(() => setLoading(false), 500);
     }
   };
 
   useEffect(() => {
     fetchMovies();
-  }, []);
+  }, [debouncedPageNumber]);
+
+  const renderMovies = () => {
+    if (loading) {
+      console.log("Loading.......");
+      return (
+        <div className="flex justify-center">
+          <BeatLoader
+            color={color}
+            loading={loading}
+            size={150}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>
+      );
+    }
+    if (error) {
+      return <p className="text-3xl font-bold text-red-600">{error}</p>;
+    }
+    return (
+      <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {movies.map((movie) => (
+          <MovieCard
+            key={movie.id}
+            id={movie.id}
+            title={movie.title}
+            releaseDate={movie.release_date}
+            overview={movie.overview}
+            rating={movie.vote_average}
+            genres={movie.genres}
+            posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+          />
+        ))}
+      </div>
+    );
+  };
+  console.log(movies);
 
   return (
     <>
@@ -95,22 +171,10 @@ function App() {
             <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
               Popular Movies
             </h2>
-            <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {movies.map((movie) => (
-                <MovieCard
-                  key={movie.id}
-                  id={movie.id}
-                  title={movie.title}
-                  releaseDate={movie.release_date}
-                  overview={movie.overview}
-                  rating={movie.vote_average}
-                  posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                />
-              ))}
-            </div>
+            {renderMovies()}
           </div>
           <div className="pagination p-8">
-            <MoviePagination />
+            <MoviePagination debouncedPageNumber setDebouncedPageNumber />
           </div>
         </main>
       </div>
@@ -119,3 +183,5 @@ function App() {
 }
 
 export default App;
+
+//const url = 'https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.asc';
