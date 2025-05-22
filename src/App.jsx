@@ -30,7 +30,7 @@ function App() {
   const [debouncedPageNumber, setDebouncedPageNumber] = useState(1);
 
   const fetchMovies = async () => {
-    console.log("pageNumber", pageNumber);
+    console.log("debouncedPageNumber", debouncedPageNumber);
     setLoading(true);
     setError("");
     try {
@@ -100,7 +100,6 @@ function App() {
 
   const renderMovies = () => {
     if (loading) {
-      console.log("Loading.......");
       return (
         <div className="flex justify-center">
           <BeatLoader
@@ -114,7 +113,12 @@ function App() {
       );
     }
     if (error) {
-      return <p className="text-3xl font-bold text-red-600">{error}</p>;
+      return (
+        <div className="flex items-center justify-center">
+          {" "}
+          <p className="text-3xl font-bold text-red-600">{error}</p>;
+        </div>
+      );
     }
     return (
       <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -133,7 +137,6 @@ function App() {
       </div>
     );
   };
-  console.log(movies);
 
   return (
     <>
@@ -174,7 +177,10 @@ function App() {
             {renderMovies()}
           </div>
           <div className="pagination p-8">
-            <MoviePagination debouncedPageNumber setDebouncedPageNumber />
+            <MoviePagination
+              debouncedPageNumber={debouncedPageNumber}
+              setDebouncePageNumber={setDebouncedPageNumber}
+            />
           </div>
         </main>
       </div>

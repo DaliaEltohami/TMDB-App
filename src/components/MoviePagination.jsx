@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
 
-const maxPageNumbers = 500;
+const maxPageNumber = 500;
 
-const MoviePagination = ({ debouncePageNumber, setDebouncePagenumber }) => {
-  const [pageNumber, setPageNumber] = useState(debouncePageNumber);
+const MoviePagination = ({ debouncedPageNumber, setDebouncePageNumber }) => {
+  const [pageNumber, setPageNumber] = useState(debouncedPageNumber);
 
   const increamentPageNumber = () => {
     setPageNumber((prev) => prev + 1);
@@ -19,7 +19,13 @@ const MoviePagination = ({ debouncePageNumber, setDebouncePagenumber }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncePagenumber(pageNumber);
+      if (
+        Number.isInteger(pageNumber) &&
+        pageNumber >= 1 &&
+        pageNumber <= maxPageNumber
+      ) {
+        setDebouncePageNumber(pageNumber);
+      }
     }, 500);
 
     return () => {
@@ -39,20 +45,30 @@ const MoviePagination = ({ debouncePageNumber, setDebouncePagenumber }) => {
       <div className="page-details flex justify-between">
         <span>
           <input
-            type="text"
+            type="number"
+            min={0}
+            max={500}
             onChange={(e) => {
-              updatePageNumber(e.target.value);
+              if (
+                Number.isInteger(Number(e.target.value)) &&
+                e.target.value >= 1 &&
+                e.target.value <= maxPageNumber
+              ) {
+                updatePageNumber(Number(e.target.value));
+              } else {
+                alert("please enter valid number");
+              }
             }}
-            value={pageNumber}
+            value={pageNumber ?? 1}
             className="w-12"
           />
         </span>
         <span className="mx-1"> / </span>
-        <span> {maxPageNumbers}</span>
+        <span> {maxPageNumber}</span>
       </div>
       <button
         onClick={increamentPageNumber}
-        disabled={pageNumber >= maxPageNumbers}
+        disabled={pageNumber >= maxPageNumber}
         className="after bg-dark-100 flex cursor-pointer items-center justify-center rounded-xl p-5 text-white disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
       >
         <FaArrowRight />

@@ -36,7 +36,7 @@ const MovieCard = ({
   // }, [id]);
 
   return (
-    <div className="movie-card bg-dark-100 flex flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white">
+    <div className="movie-card bg-dark-100 flex h-full min-h-[400px] flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white">
       <div className="movie-img h-60 overflow-hidden rounded-2xl">
         <img
           src={posterPath}
@@ -44,14 +44,16 @@ const MovieCard = ({
           className="h-full w-full object-cover"
         />
       </div>
-      <div className="movie-content flex flex-grow flex-col gap-3">
-        <div className="flex flex-1 items-start justify-between">
-          <h3 className="flex-2 text-[16px] font-bold">{title}</h3>
+      <div className="movie-content flex flex-col justify-start gap-3">
+        <div className="flex flex-1 items-end justify-between">
+          <h3 className="line-clamp-1 flex-2 overflow-hidden text-base font-bold">
+            {title}
+          </h3>
           <span className="ml-1 flex-1 text-end text-[8px] text-gray-100">
             {releaseDate}
           </span>
         </div>
-        <div className="movie-details flex flex-1 flex-wrap items-center gap-2">
+        <div className="movie-details flex flex-1 flex-wrap content-start items-start gap-2">
           <span className="rating-icon">
             <img src={ratingIcon} alt="rating icon" />
           </span>
