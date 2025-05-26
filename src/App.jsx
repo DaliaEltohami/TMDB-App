@@ -7,20 +7,12 @@ import TrendingMovieCard from "./components/TrendingMovieCard";
 import MoviePagination from "./components/MoviePagination";
 import { useState, useEffect } from "react";
 import { BeatLoader } from "react-spinners";
-
-const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const TMDB_MOVIES_API_URL = import.meta.env.VITE_TMDB_MOVIES_BASE_URL;
+import { fetchAllMovies } from "./sevices/fetchAllMovies";
+import { fetchMovieDetails } from "./sevices/fetchMovieDetails";
+import { updateSearchMovies } from "./utils/appWrite";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
-
-const API_OPTIONS = {
-  method: "GET",
-  headers: {
-    accept: "application/json",
-    Authorization: `Bearer ${TMDB_API_KEY}`,
-  },
-};
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -30,14 +22,10 @@ function App() {
   const [debouncedPageNumber, setDebouncedPageNumber] = useState(1);
 
   const fetchMovies = async () => {
-    console.log("debouncedPageNumber", debouncedPageNumber);
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        `${TMDB_MOVIES_API_URL}/discover/movie?sort_by=popularity.desc&include_adult=false&include_video=false&page=${debouncedPageNumber}`,
-        API_OPTIONS,
-      );
+      const res = await fetchAllMovies(debouncedPageNumber);
       // Check if the response is ok
       // If not, throw an error
       if (!res.ok) {
@@ -59,16 +47,7 @@ function App() {
       const MoviesWithGenres = await Promise.all(
         data.results.map(async (movie) => {
           try {
-            const movieDetailsRes = await fetch(
-              `${TMDB_MOVIES_API_URL}/movie/${movie.id}`,
-              {
-                method: "GET",
-                headers: {
-                  accept: "application/json",
-                  Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
-                },
-              },
-            );
+            const movieDetailsRes = await fetchMovieDetails(movie.id);
 
             if (!movieDetailsRes.ok) {
               throw new Error("Response was not Ok!!!");
@@ -79,6 +58,7 @@ function App() {
             return { ...movie, genres: movieDetails.genres || [] };
           } catch (error) {
             console.error("Error Fetching Genres For Movie", movie.id);
+            console.log(error.message);
             return { ...movie, genres: [] };
           }
         }),
@@ -96,6 +76,7 @@ function App() {
 
   useEffect(() => {
     fetchMovies();
+    updateSearchMovies();
   }, [debouncedPageNumber]);
 
   const renderMovies = () => {
@@ -180,6 +161,7 @@ function App() {
             <MoviePagination
               debouncedPageNumber={debouncedPageNumber}
               setDebouncePageNumber={setDebouncedPageNumber}
+              maxPageNumber={500}
             />
           </div>
         </main>

@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
 
-const maxPageNumber = 500;
-
-const MoviePagination = ({ debouncedPageNumber, setDebouncePageNumber }) => {
+const MoviePagination = ({
+  debouncedPageNumber,
+  setDebouncePageNumber,
+  maxPageNumber,
+}) => {
   const [pageNumber, setPageNumber] = useState(debouncedPageNumber);
 
   const increamentPageNumber = () => {
@@ -34,7 +36,7 @@ const MoviePagination = ({ debouncedPageNumber, setDebouncePageNumber }) => {
   }, [pageNumber]);
 
   return (
-    <div className="flex items-center justify-between text-white">
+    <div className="flex w-full items-center justify-between text-white">
       <button
         onClick={decrementPageNumber}
         disabled={pageNumber <= 1}
