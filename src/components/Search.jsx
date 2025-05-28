@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import searchIcon from "../assets/search.svg";
-import { fetchMovieDetails } from "../sevices/fetchMovieDetails";
-import { fetchSearchMovies } from "../sevices/fetchSearchMovies";
+import { fetchMovieDetails } from "../sevices/fetchMovieDetails.js";
+import { fetchSearchMovies } from "../sevices/fetchSearchMovies.js";
 import { BeatLoader } from "react-spinners";
 import MovieCard from "./MovieCard";
 import MoviePagination from "./MoviePagination";
+import { updateSearchMovies } from "../utils/updateSearchMovies";
+import noPoster from "../assets/no-movie.png";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
@@ -46,7 +48,7 @@ const Search = () => {
         throw new Error("No movies found");
       }
 
-      const MoviesWithGenres = await Promise.all(
+      const moviesWithGenres = await Promise.all(
         data.results.map(async (movie) => {
           try {
             const movieDetailsRes = await fetchMovieDetails(movie.id);
@@ -66,7 +68,7 @@ const Search = () => {
         }),
       );
 
-      setMovies(MoviesWithGenres);
+      setMovies(moviesWithGenres);
       setMaxPageNumber(data.total_pages);
     } catch (error) {
       // If there is an error, log it to the console
@@ -78,13 +80,18 @@ const Search = () => {
   };
 
   useEffect(() => {
-    if (debouncedSearchTerm !== "") fetchMovies();
+    if (debouncedSearchTerm !== "") {
+      fetchMovies();
+    }
   }, [debouncedSearchTerm, debouncedPageNumber]);
+
+  useEffect(() => {}, [debouncedSearchTerm]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
       setDebouncedPageNumber(1);
+      movies.length > 0 && updateSearchMovies(movies[0]);
       setMovies([]);
     }, 1000);
 
@@ -126,7 +133,11 @@ const Search = () => {
               overview={movie.overview}
               rating={movie.vote_average}
               genres={movie.genres}
-              posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              posterPath={
+                movie.poster_path
+                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                  : noPoster
+              }
             />
           ))}
         </div>

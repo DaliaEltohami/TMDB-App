@@ -3,13 +3,12 @@ import heroImage from "./assets/hero-img.png";
 import "./App.css";
 import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
-import TrendingMovieCard from "./components/TrendingMovieCard";
+import TrendingMovies from "./components/TrendingMovies.jsx";
 import MoviePagination from "./components/MoviePagination";
 import { useState, useEffect } from "react";
 import { BeatLoader } from "react-spinners";
-import { fetchAllMovies } from "./sevices/fetchAllMovies";
-import { fetchMovieDetails } from "./sevices/fetchMovieDetails";
-import { updateSearchMovies } from "./utils/appWrite";
+import { fetchAllMovies } from "./sevices/fetchAllMovies.js";
+import { fetchMovieDetails } from "./sevices/fetchMovieDetails.js";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
@@ -76,7 +75,6 @@ function App() {
 
   useEffect(() => {
     fetchMovies();
-    updateSearchMovies();
   }, [debouncedPageNumber]);
 
   const renderMovies = () => {
@@ -142,14 +140,7 @@ function App() {
             <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
               Trending Movies
             </h2>
-            <div className="trending-movies grid grid-cols-1 justify-items-center gap-5 md:grid-cols-3 md:justify-items-start 2xl:grid-cols-6">
-              <TrendingMovieCard />
-              <TrendingMovieCard />
-              <TrendingMovieCard />
-              <TrendingMovieCard />
-              <TrendingMovieCard />
-              <TrendingMovieCard />
-            </div>
+            <TrendingMovies />
           </div>
           <div className="popular mt-10 flex flex-col gap-10 p-8 sm:mt-15">
             <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">

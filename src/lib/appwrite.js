@@ -8,3 +8,4 @@ client.setEndpoint(APPWRITE_BASE_URL).setProject(APPWRITE_PROJECT_ID);
 
 export const account = new Account(client);
 export const databases = new Databases(client);
+console.log(client);
