@@ -20,7 +20,7 @@ const TrendingMovies = () => {
 
       console.log(trendingsRequest);
 
-      setTrendingMovies(trendingsRequest.documents.slice(0, 5));
+      setTrendingMovies(trendingsRequest.documents.slice(0, 6));
     } catch (error) {
       setError("Error Loading Trendings");
       console.log(error.message);
@@ -62,15 +62,14 @@ const TrendingMovies = () => {
           ))}
         </div>
       );
-    } else {
-      return (
-        <div className="flex items-center justify-center">
-          <p className="text-light-200 text-3xl font-bold">
-            No Trending Movies Yet!
-          </p>
-        </div>
-      );
     }
+    return (
+      <div className="flex items-center justify-center">
+        <p className="text-light-200 text-3xl font-bold">
+          No Trending Movies Yet!
+        </p>
+      </div>
+    );
   };
 
   return renderTrendings();

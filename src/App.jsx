@@ -1,5 +1,6 @@
 import movieLogo from "./assets/logo.svg";
 import heroImage from "./assets/hero-img.png";
+import noPoster from "./assets/no-movie.png";
 import "./App.css";
 import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
@@ -110,7 +111,11 @@ function App() {
             overview={movie.overview}
             rating={movie.vote_average}
             genres={movie.genres}
-            posterPath={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            posterPath={
+              movie.poster_path
+                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                : noPoster
+            }
           />
         ))}
       </div>

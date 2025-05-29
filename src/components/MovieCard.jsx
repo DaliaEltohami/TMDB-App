@@ -1,43 +1,9 @@
-import { useEffect, useState } from "react";
 import ratingIcon from "../assets/Rating.svg";
 
-const MovieCard = ({
-  id,
-  title,
-  releaseDate,
-  overview,
-  rating,
-  genres,
-  posterPath,
-}) => {
-  // const [genresList, setGenresList] = useState([]);
-
-  // const fetchGenres = async () => {
-  //   try {
-  //     const res = await fetch(
-  //       `${import.meta.env.VITE_TMDB_MOVIES_BASE_URL}/movie/${id}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           accept: "application/json",
-  //           Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
-  //         },
-  //       },
-  //     );
-  //     const data = await res.json();
-  //     setGenresList(data.genres);
-  //   } catch (error) {
-  //     console.error("Error fetching genres:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchGenres();
-  // }, [id]);
-
+const MovieCard = ({ title, releaseDate, rating, genres, posterPath }) => {
   return (
     <div className="movie-card bg-dark-100 flex h-full min-h-[400px] flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white">
-      <div className="movie-img h-60 overflow-hidden rounded-2xl">
+      <div className="movie-img h-60 cursor-pointer overflow-hidden rounded-2xl transition-all duration-200 ease-in-out hover:scale-105">
         <img
           src={posterPath}
           alt="movie poster"

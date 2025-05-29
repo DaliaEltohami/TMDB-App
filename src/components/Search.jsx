@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import searchIcon from "../assets/search.svg";
 import { fetchMovieDetails } from "../sevices/fetchMovieDetails.js";
 import { fetchSearchMovies } from "../sevices/fetchSearchMovies.js";
@@ -21,7 +21,13 @@ const Search = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [debouncedPageNumber, setDebouncedPageNumber] = useState(1);
 
+  const isNewSearch = useRef(true);
+
   const fetchMovies = async () => {
+    console.log("in side Fetch Movies");
+    console.log("debounced search term", debouncedSearchTerm);
+    console.log("debounced page number", debouncedPageNumber);
+    console.log("Is new search", isNewSearch);
     setLoading(true);
     setError("");
     try {
@@ -58,7 +64,6 @@ const Search = () => {
             }
 
             const movieDetails = await movieDetailsRes.json();
-
             return { ...movie, genres: movieDetails.genres || [] };
           } catch (error) {
             console.error("Error Fetching Genres For Movie", movie.id);
@@ -70,10 +75,15 @@ const Search = () => {
 
       setMovies(moviesWithGenres);
       setMaxPageNumber(data.total_pages);
-    } catch (error) {
+      if (isNewSearch.current && moviesWithGenres.length > 0) {
+        console.log("in is new search check");
+        updateSearchMovies(moviesWithGenres[0]);
+        isNewSearch.current = false;
+      }
+    } catch (err) {
       // If there is an error, log it to the console
-
-      console.error("Error fetching movies:", error);
+      if (error) console.error(error);
+      else console.error("Error fetching movies:", err.message);
     } finally {
       setTimeout(() => setLoading(false), 500);
     }
@@ -91,8 +101,7 @@ const Search = () => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
       setDebouncedPageNumber(1);
-      movies.length > 0 && updateSearchMovies(movies[0]);
-      setMovies([]);
+      isNewSearch.current = true;
     }, 1000);
 
     return () => {
