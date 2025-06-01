@@ -7,11 +7,14 @@
 
   --color-light-100: #cecefb;
   --color-light-200: #a8b5db;
+  --color-purple-500: #ab8bff;
 
   --color-gray-100: #9ca4ab;
 
   --color-dark-100: #0f0d23;
 
+  --shadow-modal: 0 0px 100px rgb(0 0 0 / 0.1);
+  --inset-shadow-modal: inset 0 12px 32px rgb(171 139 255 / 0.05);
   --font-dm-sans: DM Sans, sans-serif;
   --background-image-pattern-bg: url("./assets/pattern-bg.svg");
 }

@@ -124,8 +124,8 @@ function App() {
 
   return (
     <>
-      <div className="bg-pattern-bg absolute top-0 z-0 h-screen w-screen bg-cover bg-center"></div>
-      <div className="relative z-10 container mx-auto">
+      <div className="bg-pattern-bg absolute top-0 h-screen w-screen bg-cover bg-center"></div>
+      <div className="relative container mx-auto">
         <header className="mt-4 flex flex-col items-center justify-center px-4 py-3 shadow md:mt-6 md:px-6 md:py-4 lg:px-8 lg:py-5">
           <div className="flex items-center">
             <img src={movieLogo} alt="Logo" className="h-8 md:h-10" />
