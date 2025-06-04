@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import ratingIcon from "../assets/Rating.svg";
 import poster from "../assets/sonic3.jpg";
+``;
 
 const MovieDetailsModal = ({ open, onClose }) => {
   const renderDetailsModal = () => {
@@ -10,16 +11,16 @@ const MovieDetailsModal = ({ open, onClose }) => {
           className="overlay bg-primary fixed top-0 left-0 h-full w-full opacity-65"
           onClick={onClose}
         ></div>
-        <div className="movie-details-modal-content text-light-100 bg-primary shadow-light-200/50 shadow-modal relative z-1 h-4/5 w-4/5 overflow-scroll rounded-2xl p-15 2xl:w-3/4">
+        <div className="movie-details-modal-content text-light-100 bg-primary shadow-light-200/50 shadow-modal relative z-1 h-4/5 w-4/5 overflow-scroll rounded-2xl p-15 2xl:h-6/7 2xl:w-4/6">
           <div
             className="text-bold text-light-100 absolute top-1 right-4 cursor-pointer text-right text-2xl"
             onClick={onClose}
           >
             x
           </div>
-          <div className="movie-details-modal-header mb-2 flex justify-between">
+          <div className="movie-details-modal-header mb-5 flex flex-col items-start gap-2.5 md:mb-2 md:flex-row md:items-center md:justify-between">
             <h2 className="text-4xl font-bold text-white">Heading</h2>
-            <div className="bg-dark-100 flex items-center justify-between gap-2 rounded-2xl px-5 py-2">
+            <div className="bg-dark-100 flex items-center justify-between gap-2 px-5 py-2 md:rounded-2xl">
               <span className="rating-icon">
                 <img src={ratingIcon} alt="rating icon" />
               </span>

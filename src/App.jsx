@@ -1,6 +1,5 @@
 import movieLogo from "./assets/logo.svg";
 import heroImage from "./assets/hero-img.png";
-import noPoster from "./assets/no-movie.png";
 import "./App.css";
 import Search from "./components/Search";
 import MovieCard from "./components/MovieCard";
@@ -9,7 +8,7 @@ import MoviePagination from "./components/MoviePagination";
 import { useState, useEffect } from "react";
 import { BeatLoader } from "react-spinners";
 import { fetchAllMovies } from "./sevices/fetchAllMovies.js";
-import { fetchMovieDetails } from "./sevices/fetchMovieDetails.js";
+import { fetchMovieGenres } from "./sevices/fetchMovieGenres.js";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
@@ -25,10 +24,10 @@ function App() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetchAllMovies(debouncedPageNumber);
+      const moviesRes = await fetchAllMovies(debouncedPageNumber);
       // Check if the response is ok
       // If not, throw an error
-      if (!res.ok) {
+      if (!moviesRes.ok) {
         setError("Error Loading Movies!!!");
         throw new Error("Network response was not ok");
       }
@@ -36,34 +35,49 @@ function App() {
       // If the response is ok, parse the JSON
       // and set the movies state to the results from the API
 
-      const data = await res.json();
-      console.log("data", data);
+      const movies = await moviesRes.json();
+      console.log("data", movies);
 
-      if (data.results.length === 0) {
+      if (movies.results.length === 0) {
         setError("No Movies To Show");
         throw new Error("No movies found");
       }
 
-      const MoviesWithGenres = await Promise.all(
-        data.results.map(async (movie) => {
-          try {
-            const movieDetailsRes = await fetchMovieDetails(movie.id);
+      const moviesGenresRes = await fetchMovieGenres();
 
-            if (!movieDetailsRes.ok) {
-              throw new Error("Response was not Ok!!!");
-            }
+      const moviesGenres = (await moviesGenresRes.json()).genres;
+      console.log(moviesGenres);
 
-            const movieDetails = await movieDetailsRes.json();
+      const MoviesWithGenres = movies.results.map((movie) => {
+        const genres = movie.genre_ids.map((id) =>
+          moviesGenres.find((genre) => genre.id == id),
+        );
+        console.log(genres);
+        return { ...movie, genres };
+      });
 
-            return { ...movie, genres: movieDetails.genres || [] };
-          } catch (error) {
-            console.error("Error Fetching Genres For Movie", movie.id);
-            console.log(error.message);
-            return { ...movie, genres: [] };
-          }
-        }),
-      );
+      // const MoviesWithGenres = await Promise.all(
+      //   data.results.map(async (movie) => {
+      //     console.log(movie);
+      //     try {
+      //       const movieDetailsRes = await fetchMovieDetails(movie.id);
 
+      //       if (!movieDetailsRes.ok) {
+      //         throw new Error("Response was not Ok!!!");
+      //       }
+
+      //       const movieDetails = await movieDetailsRes.json();
+      //       // console.log("in fetch movie genres", movieDetails);
+
+      //       return { ...movie, ...(movieDetails || []) };
+      //     } catch (error) {
+      //       console.error("Error Fetching Genres For Movie", movie.id);
+      //       console.log(error.message);
+      //       return { ...movie, genres: [] };
+      //     }
+      //   }),
+      // );
+      console.log(MoviesWithGenres);
       setMovies(MoviesWithGenres);
     } catch (error) {
       // If there is an error, log it to the console
@@ -73,6 +87,61 @@ function App() {
       setTimeout(() => setLoading(false), 500);
     }
   };
+
+  // const fetchMovies = async () => {
+  //   setLoading(true);
+  //   setError("");
+  //   try {
+  //     const res = await fetchAllMovies(debouncedPageNumber);
+  //     // Check if the response is ok
+  //     // If not, throw an error
+  //     if (!res.ok) {
+  //       setError("Error Loading Movies!!!");
+  //       throw new Error("Network response was not ok");
+  //     }
+
+  //     // If the response is ok, parse the JSON
+  //     // and set the movies state to the results from the API
+
+  //     const data = await res.json();
+  //     console.log("data", data);
+
+  //     if (data.results.length === 0) {
+  //       setError("No Movies To Show");
+  //       throw new Error("No movies found");
+  //     }
+
+  //     const MoviesWithGenres = await Promise.all(
+  //       data.results.map(async (movie) => {
+  //         console.log(movie);
+  //         try {
+  //           const movieDetailsRes = await fetchMovieDetails(movie.id);
+
+  //           if (!movieDetailsRes.ok) {
+  //             throw new Error("Response was not Ok!!!");
+  //           }
+
+  //           const movieDetails = await movieDetailsRes.json();
+  //           // console.log("in fetch movie genres", movieDetails);
+
+  //           return { ...movie, ...(movieDetails || []) };
+  //         } catch (error) {
+  //           console.error("Error Fetching Genres For Movie", movie.id);
+  //           console.log(error.message);
+  //           return { ...movie, genres: [] };
+  //         }
+  //       }),
+  //     );
+
+  //     setMovies(MoviesWithGenres);
+  //   } catch (error) {
+  //     // If there is an error, log it to the console
+  //     setError("Error Loading Movies!!!");
+  //     console.error("Error fetching movies:", error);
+  //   } finally {
+  //     setTimeout(() => setLoading(false), 500);
+  //   }
+  // };
 
   useEffect(() => {
     fetchMovies();
@@ -95,7 +164,6 @@ function App() {
     if (error) {
       return (
         <div className="flex items-center justify-center">
-          {" "}
           <p className="text-3xl font-bold text-red-600">{error}</p>;
         </div>
       );
@@ -103,20 +171,7 @@ function App() {
     return (
       <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {movies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            id={movie.id}
-            title={movie.title}
-            releaseDate={movie.release_date}
-            overview={movie.overview}
-            rating={movie.vote_average}
-            genres={movie.genres}
-            posterPath={
-              movie.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                : noPoster
-            }
-          />
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
     );
