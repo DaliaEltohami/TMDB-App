@@ -6,7 +6,6 @@ import { Link } from "react-router";
 
 const MovieCard = ({ movie }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(movie);
 
   return (
     <>

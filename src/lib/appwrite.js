@@ -1,5 +1,7 @@
 import { Account, Client, Databases } from "appwrite";
 
+console.log(import.meta.env.VITE_APPWRITE_BASE_API);
+
 const APPWRITE_BASE_URL = import.meta.env.VITE_APPWRITE_BASE_API;
 const APPWRITE_PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
 
