@@ -1,13 +1,10 @@
 import ratingIcon from "../assets/Rating.svg";
 import poster from "../assets/sonic3.jpg";
 import { Link, useParams } from "react-router";
-import { useEffect, useState } from "react";
-import { fetchMovieDetails } from "../sevices/fetchMovieDetails";
 import noPoster from "../assets/no-movie.png";
 import { BeatLoader } from "react-spinners";
-import { fetchMovieReleaseDatesDetails } from "../sevices/fetchMovieReleaseDatesDetails";
-import { fetchMovieVideos } from "../sevices/fetchMovieVideos";
 import { FaArrowRightLong } from "react-icons/fa6";
+import useMovieDetails from "../hooks/useMovieDetails";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
@@ -22,86 +19,7 @@ const formatRuntime = (minutes) => {
 
 const MovieDetails = () => {
   const params = useParams();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [movie, setMovie] = useState({});
-
-  const getCertFromReleaseDates = async (movieReleaseDatesRes) => {
-    try {
-      if (
-        movieReleaseDatesRes.status === "fulfilled" &&
-        movieReleaseDatesRes.value.ok
-      ) {
-        const releaseDates = await movieReleaseDatesRes.value.json();
-        const usRelease = releaseDates.results.find(
-          (r) => r.iso_3166_1 === "US",
-        );
-        return (
-          usRelease?.release_dates?.find((rd) => rd.certification)
-            ?.certification || ""
-        );
-      }
-      // If the if block is not entered, treat as error:
-      throw new Error("Release dates response not fulfilled or not ok");
-    } catch (error) {
-      console.log(error.message);
-      return "";
-    }
-  };
-
-  const getTrailerFromVideos = async (movieVideosRes) => {
-    try {
-      if (movieVideosRes.status === "fulfilled" && movieVideosRes.value.ok) {
-        const videos = await movieVideosRes.value.json();
-        const trailer = videos.results.find(
-          (video) => video.type === "Trailer" && video.site === "YouTube",
-        );
-        return trailer ? trailer.key : "";
-      }
-      // If the if block is not entered, treat as error:
-      throw new Error("Videos response not fulfilled or not ok");
-    } catch (error) {
-      console.log(error.message);
-      return "";
-    }
-  };
-
-  const getMovieDetails = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      // Run both fetches in parallel and handle errors separately
-      const [movieDetailsRes, movieReleaseDatesRes, movieVideosRes] =
-        await Promise.allSettled([
-          fetchMovieDetails(params.id),
-          fetchMovieReleaseDatesDetails(params.id),
-          fetchMovieVideos(params.id),
-        ]);
-
-      if (movieDetailsRes.status !== "fulfilled" || !movieDetailsRes.value.ok) {
-        setError("Error Getting Movie Details");
-        throw new Error("Response is not ok");
-      }
-      const movieDetails = await movieDetailsRes.value.json();
-
-      // Use helper to get cert value
-      const cert = await getCertFromReleaseDates(movieReleaseDatesRes);
-
-      const trailer = await getTrailerFromVideos(movieVideosRes);
-
-      setMovie({ ...movieDetails, cert, trailer });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    }
-  };
-
-  useEffect(() => {
-    getMovieDetails();
-  }, [params.id]);
+  const { movie, loading, error } = useMovieDetails(params.id);
 
   const renderMovie = () => {
     console.log(movie);

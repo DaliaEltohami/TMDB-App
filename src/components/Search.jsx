@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import searchIcon from "../assets/search.svg";
-import { fetchMovieDetails } from "../sevices/fetchMovieDetails.js";
-import { fetchSearchMovies } from "../sevices/fetchSearchMovies.js";
+import { fetchMovieDetails } from "../services/fetchMovieDetails.js";
+import { fetchSearchMovies } from "../services/fetchSearchMovies.js";
 import { BeatLoader } from "react-spinners";
 import MovieCard from "./MovieCard";
 import MoviePagination from "./MoviePagination";

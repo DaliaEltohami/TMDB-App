@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import fetchTrendingMovies from "../sevices/fetchTrendingMovies.js";
+import fetchTrendingMovies from "../services/fetchTrendingMovies.js";
 import { BeatLoader } from "react-spinners";
 import TrendingMovieCard from "./TrendingMovieCard.jsx";
 

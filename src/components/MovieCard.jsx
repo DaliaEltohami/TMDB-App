@@ -1,18 +1,26 @@
-import { useState } from "react";
 import ratingIcon from "../assets/Rating.svg";
-import MovieDetailsModal from "./MovieDetailsModal";
 import noPoster from "../assets/no-movie.png";
-import { Link } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const MovieCard = ({ movie }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const openMovie = (id) => {
+    navigate(`/movie/${id}`, {
+      state: { backgroundLocation: location },
+    });
+  };
 
   return (
     <>
-      <div className="movie-card bg-dark-100 flex h-full min-h-[400px] flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white">
+      <div
+        className="movie-card bg-dark-100 flex h-full min-h-[400px] flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white"
+        onClick={() => openMovie(movie.id)}
+      >
         <div
           className="movie-img h-60 cursor-pointer overflow-hidden rounded-2xl transition-all duration-200 ease-in-out hover:scale-105"
-          onClick={() => setIsOpen(true)}
+          // onClick={() => setIsOpen(true)}
         >
           <img
             src={
@@ -27,7 +35,7 @@ const MovieCard = ({ movie }) => {
         <div className="movie-content flex flex-col justify-start gap-3">
           <div className="flex flex-1 items-end justify-between">
             <h3 className="line-clamp-1 flex-2 overflow-hidden text-base font-bold">
-              <Link to={`/movie-details/${movie.id}`}>{movie.title}</Link>
+              {/* <Link to={`/movie-details/${movie.id}`}>{movie.title}</Link> */}
             </h3>
             <span className="ml-1 flex-1 text-end text-[8px] text-gray-100">
               {movie.releaseDate}
@@ -51,7 +59,6 @@ const MovieCard = ({ movie }) => {
           </div>
         </div>
       </div>
-      <MovieDetailsModal open={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 };
