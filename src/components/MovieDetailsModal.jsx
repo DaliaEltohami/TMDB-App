@@ -2,12 +2,15 @@ import ReactDOM from "react-dom";
 import ratingIcon from "../assets/Rating.svg";
 import noPoster from "../assets/no-movie.png";
 import useMovieDetails from "../hooks/useMovieDetails";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 const MovieDetailsModal = () => {
   const params = useParams();
   const navigate = useNavigate();
   const { movie, loading, error } = useMovieDetails(params.id);
+
+  const location = useLocation();
+  const backgroundLocation = location.state?.backgroundLocation;
 
   const poster = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
@@ -37,18 +40,26 @@ const MovieDetailsModal = () => {
     ? Math.floor(movie.vote_average * 10) / 10
     : "";
 
+  const handleClose = () => {
+    if (backgroundLocation) {
+      navigate(-1); // Go back to previous location
+    } else {
+      navigate("/"); // Fallback if opened directly
+    }
+  };
+
   const renderDetailsModal = () => {
     console.log("Rendering Movie Details Modal Loading State", loading);
     return (
       <div className="movie-details-modal fixed top-0 z-10 flex h-screen w-screen items-center justify-center text-white">
         <div
           className="overlay bg-primary fixed top-0 left-0 h-full w-full opacity-65"
-          onClick={() => navigate(-1)}
+          onClick={handleClose}
         ></div>
         <div className="movie-details-modal-content text-light-100 bg-primary shadow-light-200/50 shadow-modal relative z-1 h-4/5 w-4/5 overflow-scroll rounded-2xl p-15 2xl:h-6/7 2xl:w-4/6">
           <div
             className="text-bold text-light-100 absolute top-1 right-4 cursor-pointer text-right text-2xl"
-            onClick={() => navigate(-1)}
+            onClick={handleClose}
           >
             x
           </div>
