@@ -24,10 +24,6 @@ const Search = () => {
   const isNewSearch = useRef(true);
 
   const fetchMovies = async () => {
-    console.log("in side Fetch Movies");
-    console.log("debounced search term", debouncedSearchTerm);
-    console.log("debounced page number", debouncedPageNumber);
-    console.log("Is new search", isNewSearch);
     setLoading(true);
     setError("");
     try {
@@ -46,7 +42,6 @@ const Search = () => {
       // and set the movies state to the results from the API
 
       const data = await res.json();
-      console.log("data", data);
 
       if (data.results.length === 0) {
         setError("No Movies To Show");
@@ -134,20 +129,7 @@ const Search = () => {
       <>
         <div className="search-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {movies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              id={movie.id}
-              title={movie.title}
-              releaseDate={movie.release_date}
-              overview={movie.overview}
-              rating={movie.vote_average}
-              genres={movie.genres}
-              posterPath={
-                movie.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                  : noPoster
-              }
-            />
+            <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>
         <MoviePagination
