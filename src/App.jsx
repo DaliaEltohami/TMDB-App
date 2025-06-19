@@ -4,6 +4,9 @@ import MovieDetailsModal from "./components/MovieDetailsModal.jsx";
 import Home from "./pages/Home.jsx";
 import MovieDetails from "./pages/MovieDetails.jsx";
 import Navbar from "./components/Navbar.jsx";
+import TVShowDetails from "./pages/TVShowDetails.jsx";
+import TVShowDetailsModal from "./components/TVShowDetailsModal.jsx";
+import TVShowDetailsModal1 from "./components/TVShowDetailsModal1.jsx";
 
 function App() {
   const location = useLocation();
@@ -18,13 +21,16 @@ function App() {
       {/* Main Routes */}
       <Routes location={backgroundLocation || location}>
         <Route path="/" element={<Home />} />
+
         <Route path="/movie-details/:id" element={<MovieDetails />} />
+        <Route path="/tvshow-details/:id" element={<TVShowDetails />} />
       </Routes>
 
       {/* Modal Routes - only render if we have a background location */}
       {backgroundLocation && (
         <Routes>
           <Route path="/movie-details/:id" element={<MovieDetailsModal />} />
+          <Route path="/tvshow-details/:id" element={<TVShowDetailsModal1 />} />
         </Routes>
       )}
     </>

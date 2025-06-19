@@ -1,7 +1,7 @@
 import ratingIcon from "../assets/Rating.svg";
 import poster from "../assets/sonic3.jpg";
 import { Link, useParams } from "react-router";
-import noPoster from "../assets/no-movie.png";
+import noPoster from "../assets/no-media.png";
 import { BeatLoader } from "react-spinners";
 import { FaArrowRightLong } from "react-icons/fa6";
 import useMovieDetails from "../hooks/useMovieDetails";

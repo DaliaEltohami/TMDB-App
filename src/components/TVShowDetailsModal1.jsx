@@ -1,43 +1,45 @@
 import ReactDOM from "react-dom";
 import ratingIcon from "../assets/Rating.svg";
 import noPoster from "../assets/no-media.png";
-import useMovieDetails from "../hooks/useMovieDetails";
+import useTVShowDetails from "../hooks/useTVShowDetails";
 import { useLocation, useNavigate, useParams } from "react-router";
 
-const MovieDetailsModal = () => {
+const TVShowDetailsModal1 = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { movie, loading, error } = useMovieDetails(params.id);
+  const { tvShow, loading, error } = useTVShowDetails(params.id);
 
   const location = useLocation();
   const backgroundLocation = location.state?.backgroundLocation;
 
-  const poster = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+  const poster = tvShow.poster_path
+    ? `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`
     : noPoster;
-  const trailer = movie.trailer
-    ? `https://www.youtube.com/embed/${movie.trailer}`
-    : null;
 
-  const genres = movie.genres ? movie.genres.map((g) => g.name).join(", ") : "";
-  const countries = movie.production_countries
-    ? movie.production_countries.map((c) => c.name).join(", ")
+  const trailer = tvShow.trailer
+    ? `https://www.youtube.com/embed/${tvShow.trailer}`
+    : noPoster;
+  const genres = tvShow.genres
+    ? tvShow.genres.map((g) => g.name).join(", ")
     : "";
-  const languages = movie.spoken_languages
-    ? movie.spoken_languages.map((l) => l.english_name).join(", ")
+  const countries = tvShow.production_countries
+    ? tvShow.production_countries.map((c) => c.name).join(", ")
     : "";
-  const companies = movie.production_companies
-    ? movie.production_companies.map((c) => c.name).join(", ")
+  const languages = tvShow.spoken_languages
+    ? tvShow.spoken_languages.map((l) => l.english_name).join(", ")
     : "";
-
-  const year = movie.release_date ? movie.release_date.slice(0, 4) : "";
-  const cert = movie.cert || "";
-  const runtime = movie.runtime
-    ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}min`
+  const companies = tvShow.production_companies
+    ? tvShow.production_companies.map((c) => c.name).join(", ")
     : "";
 
-  const rating = movie.vote_average
-    ? Math.floor(movie.vote_average * 10) / 10
+  const year = tvShow.release_date ? tvShow.release_date.slice(0, 4) : "";
+  const cert = tvShow.cert || "";
+  const runtime = tvShow.runtime
+    ? `${Math.floor(tvShow.runtime / 60)}h ${tvShow.runtime % 60}min`
+    : "";
+
+  const rating = tvShow.vote_average
+    ? Math.floor(tvShow.vote_average * 10) / 10
     : "";
 
   const handleClose = () => {
@@ -49,7 +51,7 @@ const MovieDetailsModal = () => {
   };
 
   const renderDetailsModal = () => {
-    console.log("Rendering Movie Details Modal Loading State", loading);
+    console.log("Rendering TV Show Details Modal Loading State", loading);
     return (
       <div className="movie-details-modal fixed top-0 z-10 flex h-screen w-screen items-center justify-center text-white">
         <div
@@ -76,7 +78,7 @@ const MovieDetailsModal = () => {
             <>
               <div className="movie-details-modal-header mb-5 flex flex-col items-start gap-2.5 md:mb-2 md:flex-row md:items-center md:justify-between">
                 <h2 className="text-4xl font-bold text-white">
-                  {movie.title || movie.original_title}
+                  {tvShow.title || tvShow.original_title}
                 </h2>
                 <div className="bg-dark-100 flex items-center justify-between gap-2 px-5 py-2 md:rounded-2xl">
                   <span className="rating-icon">
@@ -101,7 +103,7 @@ const MovieDetailsModal = () => {
                 <div className="movie-details-modal-poster h-[200px] w-full overflow-hidden rounded-2xl md:h-full md:flex-2/6">
                   <img
                     src={poster}
-                    alt="movie poster"
+                    alt="tv show poster"
                     className="h-full w-full object-cover"
                   />
                 </div>
@@ -133,15 +135,15 @@ const MovieDetailsModal = () => {
                 </div>
                 <div className="overview mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Overview: </h5>
-                  <p className="flex-4/5 text-white">{movie.overview}</p>
+                  <p className="flex-4/5 text-white">{tvShow.overview}</p>
                 </div>
                 <div className="release-date mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Release Date: </h5>
-                  <p className="flex-4/5 text-white">{movie.release_date}</p>
+                  <p className="flex-4/5 text-white">{tvShow.release_date}</p>
                 </div>
                 <div className="status mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Status: </h5>
-                  <p className="flex-4/5 text-white">{movie.status}</p>
+                  <p className="flex-4/5 text-white">{tvShow.status}</p>
                 </div>
                 <div className="countries mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Countries: </h5>
@@ -168,4 +170,4 @@ const MovieDetailsModal = () => {
   );
 };
 
-export default MovieDetailsModal;
+export default TVShowDetailsModal1;

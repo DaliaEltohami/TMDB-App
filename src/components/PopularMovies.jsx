@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
-import MovieCard from "./MovieCard";
+import MediaCard from "./MediaCard";
 import MoviePagination from "./MoviePagination";
 import { fetchMovieGenres } from "../services/fetchMovieGenres";
 import { fetchAllMovies } from "../services/fetchAllMovies";
@@ -87,7 +87,7 @@ const PopularMovies = () => {
     return (
       <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MediaCard key={movie.id} media={movie} />
         ))}
       </div>
     );

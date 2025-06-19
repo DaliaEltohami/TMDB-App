@@ -3,10 +3,9 @@ import searchIcon from "../assets/search.svg";
 import { fetchMovieDetails } from "../services/fetchMovieDetails.js";
 import { fetchSearchMovies } from "../services/fetchSearchMovies.js";
 import { BeatLoader } from "react-spinners";
-import MovieCard from "./MovieCard";
+import MediaCard from "./MediaCard.jsx";
 import MoviePagination from "./MoviePagination";
-import { updateSearchMovies } from "../utils/updateSearchMovies";
-import noPoster from "../assets/no-movie.png";
+import { updateAppwriteTrendingMovies } from "../utils/updateSearchMovies.js";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
@@ -72,7 +71,7 @@ const Search = () => {
       setMaxPageNumber(data.total_pages);
       if (isNewSearch.current && moviesWithGenres.length > 0) {
         console.log("in is new search check");
-        updateSearchMovies(moviesWithGenres[0]);
+        updateAppwriteTrendingMovies(moviesWithGenres[0]);
         isNewSearch.current = false;
       }
     } catch (err) {
@@ -129,7 +128,7 @@ const Search = () => {
       <>
         <div className="search-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+            <MediaCard key={movie.id} media={movie} />
           ))}
         </div>
         <MoviePagination

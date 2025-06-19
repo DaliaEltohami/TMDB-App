@@ -1,4 +1,4 @@
-import noPoster from "../assets/no-movie.png";
+import noPoster from "../assets/no-media.png";
 
 const TrendingMovieCard = ({ movie, index }) => (
   <div className="trending-movie-card flex h-[145px] w-52 items-center justify-center overflow-hidden rounded-lg md:justify-start">

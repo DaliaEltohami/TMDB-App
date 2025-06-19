@@ -1,11 +1,10 @@
 import { ID, Query } from "appwrite";
 import { databases } from "../lib/appwrite.js";
-import noPoster from "../assets/no-movie.png";
 
 const APPWRITE_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const APPWRITE_COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
 
-export const updateSearchMovies = async (movie) => {
+export const updateAppwriteTrendingMovies = async (movie) => {
   const searchMoviesList = await databases.listDocuments(
     APPWRITE_DATABASE_ID,
     APPWRITE_COLLECTION_ID,
