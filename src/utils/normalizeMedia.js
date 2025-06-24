@@ -9,6 +9,8 @@ export function normalizeMediaItem(item) {
     overview: item.overview,
     mediaType: item.media_type === "movie" ? "movie" : "TV show",
     voteAverage: item.vote_average ?? 0,
+    runtime: isMovie ? item.runtime : item.episode_run_time?.[0] || "",
     genres: item.genres || [], // fallback to empty array
+    ...item,
   };
 }

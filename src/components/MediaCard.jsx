@@ -9,13 +9,26 @@ const MediaCard = ({ media }) => {
   const normalizedMedia = normalizeMediaItem(media);
 
   const handleMediaNavigation = () => {
-    normalizedMedia.mediaType === "movie"
-      ? navigate(`/movie-details/${media.id}`, {
-          state: { backgroundLocation: location },
-        })
-      : navigate(`/tvshow-details/${media.id}`, {
-          state: { backgroundLocation: location },
-        });
+    // normalizedMedia.mediaType === "movie"
+    //   ? navigate(`/movie-details/${media.id}`, {
+    //       state: {
+    //         backgroundLocation: location,
+    //         mediaType: normalizedMedia.mediaType,
+    //       },
+    //     })
+    //   : navigate(`/tvshow-details/${media.id}`, {
+    //       state: {
+    //         backgroundLocation: location,
+    //         mediaType: normalizedMedia.mediaType,
+    //       },
+    //     });
+
+    navigate(`/media-details/${media.id}`, {
+      state: {
+        backgroundLocation: location,
+        mediaType: normalizedMedia.mediaType,
+      },
+    });
   };
   return (
     <div

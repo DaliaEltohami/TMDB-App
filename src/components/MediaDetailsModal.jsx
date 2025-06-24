@@ -1,19 +1,23 @@
 import ReactDOM from "react-dom";
 import ratingIcon from "../assets/Rating.svg";
 import noPoster from "../assets/no-media.png";
-import useMovieDetails from "../hooks/useMovieDetails";
 import { useLocation, useNavigate, useParams } from "react-router";
+import useMediaDetails from "../hooks/useMediaDetails";
 
 const MediaDetailsModal = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const { movie: media, loading, error } = useMovieDetails(params.id);
-
   const location = useLocation();
+  const mediaType = location.state?.mediaType || "movie"; // Default to 'movie' if not provided
+  console.log(mediaType, "mediaType in MediaDetailsModal");
   const backgroundLocation = location.state?.backgroundLocation;
 
-  const poster = media.poster_path
-    ? `https://image.tmdb.org/t/p/w500${media.poster_path}`
+  const { media, loading, error } = useMediaDetails(mediaType, params.id);
+
+  console.log(media, "media in MediaDetailsModal");
+
+  const poster = media.posterPath
+    ? `https://image.tmdb.org/t/p/w500${media.posterPath}`
     : noPoster;
   const trailer = media.trailer
     ? `https://www.youtube.com/embed/${media.trailer}`
@@ -30,14 +34,14 @@ const MediaDetailsModal = () => {
     ? media.production_companies.map((c) => c.name).join(", ")
     : "";
 
-  const year = media.release_date ? media.release_date.slice(0, 4) : "";
+  const year = media.date ? media.date.slice(0, 4) : "";
   const cert = media.cert || "";
-  const runtime = media.runtime
-    ? `${Math.floor(media.runtime / 60)}h ${media.runtime % 60}min`
-    : "";
 
-  const rating = media.vote_average
-    ? Math.floor(media.vote_average * 10) / 10
+  const hours = media.runtime ? Math.floor(media.runtime / 60) : "";
+  const minutes = media.runtime ? media.runtime % 60 : "";
+
+  const rating = media.voteAverage
+    ? Math.floor(media.voteAverage * 10) / 10
     : "";
 
   const handleClose = () => {
@@ -49,14 +53,14 @@ const MediaDetailsModal = () => {
   };
 
   const renderDetailsModal = () => {
-    console.log("Rendering Media Details Modal Loading State", loading);
+    console.log("Rendering Movie Details Modal Loading State", loading);
     return (
-      <div className="media-details-modal fixed top-0 z-10 flex h-screen w-screen items-center justify-center text-white">
+      <div className="movie-details-modal fixed top-0 z-10 flex h-screen w-screen items-center justify-center text-white">
         <div
           className="overlay bg-primary fixed top-0 left-0 h-full w-full opacity-65"
           onClick={handleClose}
         ></div>
-        <div className="media-details-modal-content text-light-100 bg-primary shadow-light-200/50 shadow-modal relative z-1 h-4/5 w-4/5 overflow-scroll rounded-2xl p-15 2xl:h-6/7 2xl:w-4/6">
+        <div className="movie-details-modal-content text-light-100 bg-primary shadow-light-200/50 shadow-modal relative z-1 h-4/5 w-4/5 overflow-scroll rounded-2xl p-15 2xl:h-6/7 2xl:w-4/6">
           <div
             className="text-bold text-light-100 absolute top-1 right-4 cursor-pointer text-right text-2xl"
             onClick={handleClose}
@@ -74,7 +78,7 @@ const MediaDetailsModal = () => {
             </div>
           ) : (
             <>
-              <div className="media-details-modal-header mb-5 flex flex-col items-start gap-2.5 md:mb-2 md:flex-row md:items-center md:justify-between">
+              <div className="movie-details-modal-header mb-5 flex flex-col items-start gap-2.5 md:mb-2 md:flex-row md:items-center md:justify-between">
                 <h2 className="text-4xl font-bold text-white">
                   {media.title || media.original_title}
                 </h2>
@@ -86,26 +90,27 @@ const MediaDetailsModal = () => {
                   <span>/ 10</span>
                 </div>
               </div>
-              <div className="media-details-modal-sub-heading mb-5">
+              <div className="movie-details-modal-sub-heading mb-5">
                 <span>
                   {year}
-                  {year && " •"}
+                  {cert && " • "}
                 </span>
                 <span>
                   {cert}
-                  {cert && " •"}
+                  {hours || minutes ? " • " : ""}
                 </span>
-                <span>{runtime}</span>
+                <span>{hours !== 0 && `${hours}h `}</span>
+                <span>{minutes !== 0 && `${minutes}min`}</span>
               </div>
-              <div className="media-details-modal-images mb-5 flex w-full flex-col gap-5 gap-y-2.5 md:h-80 md:flex-row">
-                <div className="media-details-modal-poster h-[200px] w-full overflow-hidden rounded-2xl md:h-full md:flex-2/6">
+              <div className="movie-details-modal-images mb-5 flex w-full flex-col gap-5 gap-y-2.5 md:h-80 md:flex-row">
+                <div className="movie-details-modal-poster h-[200px] w-full overflow-hidden rounded-2xl md:h-full md:flex-2/6">
                   <img
                     src={poster}
-                    alt="media poster"
+                    alt="movie poster"
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <div className="media-details-modal-trailer-poster h-[150px] overflow-hidden rounded-2xl md:h-full md:flex-4/6">
+                <div className="movie-details-modal-trailer-poster h-[150px] overflow-hidden rounded-2xl md:h-full md:flex-4/6">
                   {trailer ? (
                     <iframe
                       width="100%"
@@ -120,13 +125,13 @@ const MediaDetailsModal = () => {
                   ) : (
                     <img
                       src={poster}
-                      alt="media poster"
+                      alt="movie poster"
                       className="h-full w-full object-cover"
                     />
                   )}
                 </div>
               </div>
-              <div className="media-details-modal-details">
+              <div className="movie-details-modal-details">
                 <div className="genres mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Genres: </h5>
                   <p className="flex-4/5 text-white">{genres}</p>

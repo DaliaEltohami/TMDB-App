@@ -1,12 +1,10 @@
 import "./App.css";
-import { Outlet, Route, Routes, useLocation } from "react-router";
-import MovieDetailsModal from "./components/MovieDetailsModal.jsx";
+import { Route, Routes, useLocation } from "react-router";
 import Home from "./pages/Home.jsx";
 import MovieDetails from "./pages/MovieDetails.jsx";
 import Navbar from "./components/Navbar.jsx";
 import TVShowDetails from "./pages/TVShowDetails.jsx";
-import TVShowDetailsModal from "./components/TVShowDetailsModal.jsx";
-import TVShowDetailsModal1 from "./components/TVShowDetailsModal1.jsx";
+import MediaDetailsModal from "./components/MediaDetailsModal.jsx";
 
 function App() {
   const location = useLocation();
@@ -29,8 +27,7 @@ function App() {
       {/* Modal Routes - only render if we have a background location */}
       {backgroundLocation && (
         <Routes>
-          <Route path="/movie-details/:id" element={<MovieDetailsModal />} />
-          <Route path="/tvshow-details/:id" element={<TVShowDetailsModal1 />} />
+          <Route path="/media-details/:id" element={<MediaDetailsModal />} />
         </Routes>
       )}
     </>
