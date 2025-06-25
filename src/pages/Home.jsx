@@ -1,21 +1,17 @@
 import "../App.jsx";
-import TrendingMovies from "../components/TrendingMovies.jsx";
 import Header from "../components/Header.jsx";
 import PopularMovies from "../components/PopularMovies.jsx";
 import Trendings from "../components/Trendings.jsx";
+import TrendingSearchMovies from "../components/TrendingSearchMovies.jsx";
 
 function Home() {
   return (
     <>
-      <div className="bg-pattern-bg absolute top-0 h-screen w-screen bg-cover bg-center"></div>
-      <div className="relative container mx-auto">
-        <Header />
-        <main className="mt-10 flex flex-col gap-7 px-8 sm:mt-15">
-          {/* <TrendingMovies /> */}
-          <Trendings />
-          {/* <PopularMovies /> */}
-        </main>
-      </div>
+      <Header />
+      <main className="mt-10 flex flex-col gap-7 px-8 sm:mt-15">
+        <Trendings />
+        <PopularMovies />
+      </main>
     </>
   );
 }

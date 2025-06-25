@@ -1,15 +1,20 @@
 import ReactDOM from "react-dom";
 import ratingIcon from "../assets/Rating.svg";
 import noPoster from "../assets/no-media.png";
-import { useLocation, useNavigate, useParams } from "react-router";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router";
 import useMediaDetails from "../hooks/useMediaDetails";
 
 const MediaDetailsModal = () => {
   const params = useParams();
+  const mediaType = params["media-type"] || "movie";
+
   const navigate = useNavigate();
   const location = useLocation();
-  const mediaType = location.state?.mediaType || "movie"; // Default to 'movie' if not provided
-  console.log(mediaType, "mediaType in MediaDetailsModal");
   const backgroundLocation = location.state?.backgroundLocation;
 
   const { media, loading, error } = useMediaDetails(mediaType, params.id);
@@ -19,9 +24,6 @@ const MediaDetailsModal = () => {
   const poster = media.posterPath
     ? `https://image.tmdb.org/t/p/w500${media.posterPath}`
     : noPoster;
-  const trailer = media.trailer
-    ? `https://www.youtube.com/embed/${media.trailer}`
-    : null;
 
   const genres = media.genres ? media.genres.map((g) => g.name).join(", ") : "";
   const countries = media.production_countries
@@ -111,11 +113,11 @@ const MediaDetailsModal = () => {
                   />
                 </div>
                 <div className="movie-details-modal-trailer-poster h-[150px] overflow-hidden rounded-2xl md:h-full md:flex-4/6">
-                  {trailer ? (
+                  {media.trailer ? (
                     <iframe
                       width="100%"
                       height="100%"
-                      src={trailer}
+                      src={`https://www.youtube.com/embed/${media.trailer}`}
                       title="Trailer"
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -124,7 +126,7 @@ const MediaDetailsModal = () => {
                     ></iframe>
                   ) : (
                     <img
-                      src={poster}
+                      src={noPoster}
                       alt="movie poster"
                       className="h-full w-full object-cover"
                     />

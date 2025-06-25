@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="navbar relative z-2 flex items-center justify-between bg-transparent px-6 py-4 text-white">
+    <div className="navbar relative z-2 container mx-auto flex items-center justify-between bg-transparent px-6 py-4 text-white">
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
           <img src={movieLogo} alt="Logo" className="h-6 md:h-8" />

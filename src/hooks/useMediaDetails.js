@@ -111,25 +111,6 @@ const useMediaDetails = (mediaType, mediaId) => {
     }
   };
 
-  const getTVShowCertFromReleaseDates = async (releaseDatesRes) => {
-    console.log("TV Show Release Dates Response:", releaseDatesRes);
-    try {
-      if (releaseDatesRes.status === "fulfilled" && releaseDatesRes.value.ok) {
-        const releaseDates = await releaseDatesRes.value.json();
-        console.log("TV Show Release Dates:", releaseDates);
-
-        const usRelease = releaseDates.results.find(
-          (r) => r.iso_3166_1 === "US",
-        );
-        return usRelease?.rating || "";
-      }
-      throw new Error("Release dates response not fulfilled or not ok");
-    } catch (error) {
-      console.log(error.message);
-      return "";
-    }
-  };
-
   const getTVShowTrailerFromVideos = async (videosRes) => {
     try {
       if (videosRes.status === "fulfilled" && videosRes.value.ok) {
@@ -144,6 +125,27 @@ const useMediaDetails = (mediaType, mediaId) => {
       throw new Error("Videos response not fulfilled or not ok");
     } catch (error) {
       console.log(error.message);
+      return "";
+    }
+  };
+
+  const getTVShowCertFromReleaseDates = async (releaseDatesRes) => {
+    try {
+      if (releaseDatesRes.status === "fulfilled" && releaseDatesRes.value.ok) {
+        const contentRatings = await releaseDatesRes.value.json();
+        // Try US rating first
+        let ratingEntry = contentRatings.results.find(
+          (r) => r.iso_3166_1 === "US" && r.rating,
+        );
+        // Fallback: first available rating with a value
+        if (!ratingEntry) {
+          ratingEntry = contentRatings.results.find((r) => r.rating);
+        }
+        return ratingEntry ? ratingEntry.rating : "";
+      }
+      throw new Error("Content ratings response not fulfilled or not ok");
+    } catch (error) {
+      console.error("Error fetching TV show content rating:", error.message);
       return "";
     }
   };

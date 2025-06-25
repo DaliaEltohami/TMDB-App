@@ -1,10 +1,10 @@
 import "./App.css";
 import { Route, Routes, useLocation } from "react-router";
 import Home from "./pages/Home.jsx";
-import MovieDetails from "./pages/MovieDetails.jsx";
 import Navbar from "./components/Navbar.jsx";
-import TVShowDetails from "./pages/TVShowDetails.jsx";
 import MediaDetailsModal from "./components/MediaDetailsModal.jsx";
+import MediaDetails from "./pages/MediaDetails.jsx";
+import Movies from "./pages/Movies.jsx";
 
 function App() {
   const location = useLocation();
@@ -15,21 +15,30 @@ function App() {
 
   return (
     <>
-      <Navbar />
-      {/* Main Routes */}
-      <Routes location={backgroundLocation || location}>
-        <Route path="/" element={<Home />} />
+      <div className="bg-pattern-bg absolute top-0 -z-10 h-screen w-screen bg-cover bg-center"></div>
+      <div className="container mx-auto">
+        <Navbar />
+        {/* Main Routes */}
+        <Routes location={backgroundLocation || location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/movies" element={<Movies />} />
 
-        <Route path="/movie-details/:id" element={<MovieDetails />} />
-        <Route path="/tvshow-details/:id" element={<TVShowDetails />} />
-      </Routes>
-
-      {/* Modal Routes - only render if we have a background location */}
-      {backgroundLocation && (
-        <Routes>
-          <Route path="/media-details/:id" element={<MediaDetailsModal />} />
+          <Route
+            path="/media-details/:media-type/:id"
+            element={<MediaDetails />}
+          />
         </Routes>
-      )}
+
+        {/* Modal Routes - only render if we have a background location */}
+        {backgroundLocation && (
+          <Routes>
+            <Route
+              path="/media-details/:media-type/:id"
+              element={<MediaDetailsModal />}
+            />
+          </Routes>
+        )}
+      </div>
     </>
   );
 }

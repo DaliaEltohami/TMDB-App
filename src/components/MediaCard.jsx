@@ -7,23 +7,9 @@ const MediaCard = ({ media }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const normalizedMedia = normalizeMediaItem(media);
-
+  console.log(media, "media in MediaCard");
   const handleMediaNavigation = () => {
-    // normalizedMedia.mediaType === "movie"
-    //   ? navigate(`/movie-details/${media.id}`, {
-    //       state: {
-    //         backgroundLocation: location,
-    //         mediaType: normalizedMedia.mediaType,
-    //       },
-    //     })
-    //   : navigate(`/tvshow-details/${media.id}`, {
-    //       state: {
-    //         backgroundLocation: location,
-    //         mediaType: normalizedMedia.mediaType,
-    //       },
-    //     });
-
-    navigate(`/media-details/${media.id}`, {
+    navigate(`/media-details/${normalizedMedia.mediaType}/${media.id}`, {
       state: {
         backgroundLocation: location,
         mediaType: normalizedMedia.mediaType,
@@ -60,7 +46,7 @@ const MediaCard = ({ media }) => {
           </span>
         </div>
         <span className="media-category text-[14px] text-gray-100 capitalize">
-          {normalizedMedia.mediaType}
+          {normalizedMedia.mediaType === "movie" ? "Movie" : "TV Show"}
         </span>
         <div className="media-details flex flex-1 flex-wrap content-start items-start gap-2">
           <span className="rating-icon">

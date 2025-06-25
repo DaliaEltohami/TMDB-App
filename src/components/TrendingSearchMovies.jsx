@@ -6,7 +6,7 @@ import TrendingMovieCard from "./TrendingMovieCard.jsx";
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
 
-const TrendingMovies = () => {
+const TrendingSearchMovies = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -56,7 +56,7 @@ const TrendingMovies = () => {
       return (
         <div className="trendings mt-10 flex flex-col gap-10 p-8 sm:mt-15">
           <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
-            Trending Movies
+            Trending Search Movies
           </h2>
           <div className="trending-movies grid grid-cols-1 justify-items-center gap-5 md:grid-cols-3 md:justify-items-start 2xl:grid-cols-6">
             {trendingMovies.map((movie, i) => (
@@ -78,4 +78,4 @@ const TrendingMovies = () => {
   return renderTrendings();
 };
 
-export default TrendingMovies;
+export default TrendingSearchMovies;
