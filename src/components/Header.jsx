@@ -8,8 +8,8 @@ const Header = () => {
         <img src={heroImage} alt="Hero Image" className="h-50 md:h-100" />
       </div>
       <h1 className="font-dm-sans max-w-4xl text-center text-5xl leading-tight font-bold text-white sm:text-[64px] sm:leading-[76px]">
-        Find <span className="text-gradient">Movies</span> You’ll Love Without
-        the Hassle
+        Find <span className="text-gradient">Movies and TV Shows</span> You’ll
+        Love Without the Hassle
       </h1>
       <Search />
     </header>

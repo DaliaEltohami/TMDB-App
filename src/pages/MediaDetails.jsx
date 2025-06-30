@@ -31,6 +31,8 @@ const MediaDetails = () => {
   const hours = media.runtime ? Math.floor(media.runtime / 60) : "";
   const minutes = media.runtime ? media.runtime % 60 : "";
 
+  console.log("Runtime:", hours, minutes);
+
   const rating = media.voteAverage
     ? Math.floor(media.voteAverage * 10) / 10
     : "";
@@ -81,8 +83,8 @@ const MediaDetails = () => {
             <span>
               {media.cert} {hours || minutes ? "• " : ""}
             </span>
-            <span>{hours !== 0 && `${hours}h `}</span>
-            <span>{minutes !== 0 && `${minutes}min`}</span>
+            <span>{Boolean(hours) && `${hours}h `}</span>
+            <span>{Boolean(minutes) && `${minutes}min`}</span>
           </div>
           <div className="movie-details-modal-images mb-5 flex w-full flex-col justify-between gap-10 gap-y-2.5 md:h-[400px] md:flex-row">
             <div className="movie-details-modal-poster h-[250px] w-full overflow-hidden rounded-2xl md:h-full md:w-1/5">

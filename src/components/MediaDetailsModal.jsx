@@ -101,8 +101,8 @@ const MediaDetailsModal = () => {
                   {cert}
                   {hours || minutes ? " • " : ""}
                 </span>
-                <span>{hours !== 0 && `${hours}h `}</span>
-                <span>{minutes !== 0 && `${minutes}min`}</span>
+                <span>{Boolean(hours) && `${hours}h `}</span>
+                <span>{Boolean(minutes) && `${minutes}min`}</span>
               </div>
               <div className="movie-details-modal-images mb-5 flex w-full flex-col gap-5 gap-y-2.5 md:h-80 md:flex-row">
                 <div className="movie-details-modal-poster h-[200px] w-full overflow-hidden rounded-2xl md:h-full md:flex-2/6">
