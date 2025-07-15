@@ -18,6 +18,8 @@ const TrendingSearchMovies = () => {
     try {
       const trendingsRequest = await fetchTrendingMovies();
 
+      console.log("trendings from appwrite", trendingsRequest);
+
       setTrendingMovies(trendingsRequest.documents.slice(0, 6));
     } catch (error) {
       setError("Error Loading Trendings");

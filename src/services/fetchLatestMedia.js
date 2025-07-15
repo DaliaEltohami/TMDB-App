@@ -19,8 +19,9 @@ export const fetchAllMovies = async (debouncedPageNumber) => {
 };
 
 export async function fetchLatestMovies(debouncedPageNumber) {
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
   const res = await fetch(
-    `${TMDB_MOVIES_API_URL}/movie/now_playing?language=en-US&page=${debouncedPageNumber}`,
+    `${TMDB_MOVIES_API_URL}/discover/movie?sort_by=release_date.desc&release_date.lte=${today}&page=${debouncedPageNumber}`,
     API_OPTIONS,
   );
   return res;

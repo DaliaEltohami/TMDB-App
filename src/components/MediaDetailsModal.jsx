@@ -144,7 +144,7 @@ const MediaDetailsModal = () => {
                 </div>
                 <div className="release-date mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Release Date: </h5>
-                  <p className="flex-4/5 text-white">{media.release_date}</p>
+                  <p className="flex-4/5 text-white">{media.date}</p>
                 </div>
                 <div className="status mb-3 flex flex-col md:flex-row">
                   <h5 className="flex-1/5">Status: </h5>

@@ -1,6 +1,7 @@
 import "../App.jsx";
 import Header from "../components/Header.jsx";
 import Latest from "../components/Latest.jsx";
+import LatestMovies from "../components/LatestMovies.jsx";
 import PopularMovies from "../components/PopularMovies.jsx";
 import Trendings from "../components/Trendings.jsx";
 import TrendingSearchMovies from "../components/TrendingSearchMovies.jsx";
@@ -10,9 +11,8 @@ function Home() {
     <>
       <Header />
       <main className="mt-10 flex flex-col gap-7 px-8 sm:mt-15">
-        <Latest />
+        <TrendingSearchMovies />
         <Trendings />
-        <PopularMovies />
       </main>
     </>
   );

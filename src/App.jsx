@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar.jsx";
 import MediaDetailsModal from "./components/MediaDetailsModal.jsx";
 import MediaDetails from "./pages/MediaDetails.jsx";
 import Movies from "./pages/Movies.jsx";
+import TVShows from "./pages/TVShows.jsx";
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function App() {
         <Routes location={backgroundLocation || location}>
           <Route path="/" element={<Home />} />
           <Route path="/movies" element={<Movies />} />
+          <Route path="/tv-shows" element={<TVShows />} />
 
           <Route
             path="/media-details/:media-type/:id"

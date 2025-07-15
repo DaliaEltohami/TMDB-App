@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import searchIcon from "../assets/search.svg";
-import { fetchMovieDetails } from "../services/fetchMovieDetails.js";
-import { fetchSearchMovies } from "../services/fetchSearchMovies.js";
 import { BeatLoader } from "react-spinners";
 import MediaCard from "./MediaCard.jsx";
 import MoviePagination from "./MoviePagination";
 import { updateAppwriteTrendingMovies } from "../utils/updateSearchMovies.js";
+import { fetchMovieGenres } from "../services/fetchMovieGenres.js";
+import { fetchTVGenres } from "../services/fetchTVGenres.js";
+import { fetchSearchMovies } from "../services/fetchSearchMovies.js";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
@@ -42,36 +43,37 @@ const Search = () => {
 
       const data = await res.json();
 
+      console.log("search data from tmdb", data);
+
       if (data.results.length === 0) {
         setError("No Movies To Show");
         setMaxPageNumber(0);
         throw new Error("No movies found");
       }
 
-      const moviesWithGenres = await Promise.all(
-        data.results.map(async (movie) => {
-          try {
-            const movieDetailsRes = await fetchMovieDetails(movie.id);
+      const [moviesGenresRes, tvGenresRes] = await Promise.allSettled([
+        fetchMovieGenres(),
+        fetchTVGenres(),
+      ]);
+      const tvGenres = (await tvGenresRes.value.json()).genres;
+      const movieGenres = (await moviesGenresRes.value.json()).genres;
+      const allGenres = [...movieGenres, ...tvGenres];
 
-            if (!movieDetailsRes.ok) {
-              throw new Error("Response was not Ok!!!");
-            }
+      const searchDataWithGenres = data.results.map((item) => {
+        const genres = item.genre_ids?.map((id) =>
+          allGenres.find((genre) => genre.id == id),
+        );
 
-            const movieDetails = await movieDetailsRes.json();
-            return { ...movie, genres: movieDetails.genres || [] };
-          } catch (error) {
-            console.error("Error Fetching Genres For Movie", movie.id);
-            console.log(error.message);
-            return { ...movie, genres: [] };
-          }
-        }),
-      );
+        return { ...item, genres };
+      });
 
-      setMovies(moviesWithGenres);
+      console.log("search data with genres", searchDataWithGenres);
+
+      setMovies(searchDataWithGenres);
       setMaxPageNumber(data.total_pages);
-      if (isNewSearch.current && moviesWithGenres.length > 0) {
+      if (isNewSearch.current && searchDataWithGenres.length > 0) {
         console.log("in is new search check");
-        updateAppwriteTrendingMovies(moviesWithGenres[0]);
+        updateAppwriteTrendingMovies(searchDataWithGenres[0]);
         isNewSearch.current = false;
       }
     } catch (err) {
@@ -88,8 +90,6 @@ const Search = () => {
       fetchMovies();
     }
   }, [debouncedSearchTerm, debouncedPageNumber]);
-
-  useEffect(() => {}, [debouncedSearchTerm]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

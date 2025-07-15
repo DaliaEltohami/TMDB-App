@@ -55,9 +55,10 @@ const MediaCard = ({ media }) => {
           <span className="rating font-bold">
             {Math.floor(normalizedMedia.voteAverage * 10) / 10}
           </span>
-          {normalizedMedia.genres.map((genre) => (
+          {normalizedMedia.genres?.map((genre, i) => (
             <span key={genre?.id} className="genre text-[14px] text-gray-100">
-              {genre?.name} •
+              {genre?.name}
+              {i < normalizedMedia.genres?.length - 1 && " •"}
             </span>
           ))}
         </div>

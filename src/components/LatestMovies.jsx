@@ -1,87 +1,67 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MediaCard from "./MediaCard";
 import MoviePagination from "./MoviePagination";
 import { BeatLoader } from "react-spinners";
 import { fetchMovieGenres } from "../services/fetchMovieGenres";
-import { fetchTrendingsFromTMDB } from "../services/fetchTrendingsFromTMDB";
 import { fetchTVGenres } from "../services/fetchTVGenres";
+import {
+  fetchLatestMovies,
+  fetchLatestTVShows,
+} from "../services/fetchLatestMedia";
 
 const rootStyles = getComputedStyle(document.documentElement);
 const color = rootStyles.getPropertyValue("--color-light-100").trim();
 
-const Trendings = () => {
-  const [trendings, setTrendings] = useState([]);
+const LatestMovies = () => {
+  const [latestMovies, setLatestMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  console.log(latestMovies, "latest from tmdb");
+
   const [debouncedPageNumber, setDebouncedPageNumber] = useState(1);
 
-  const fetchMovies = async () => {
+  const fetchLatest = async () => {
     setLoading(true);
     setError("");
     try {
-      const moviesRes = await fetchTrendingsFromTMDB();
+      const latestMoviesRes = await fetchLatestMovies(debouncedPageNumber);
 
-      console.log("trendings from tmdb", moviesRes);
+      console.log("latest movies res from tmdb", latestMoviesRes);
       // Check if the response is ok
       // If not, throw an error
-      if (!moviesRes.ok) {
-        setError("Error Loading Movies!!!");
-        throw new Error("Network response was not ok");
+      if (!latestMoviesRes.status === "fulfilled") {
+        setError("Error Loading Latest Movies!!!");
+        throw new Error("Network response for latest movies was not ok");
       }
 
       // If the response is ok, parse the JSON
       // and set the movies state to the results from the API
 
-      const movies = await moviesRes.json();
+      const latestMovies = await latestMoviesRes.json();
 
-      console.log(
-        "trendings from tmdb data ",
-        JSON.parse(JSON.stringify(movies)),
-      );
+      console.log("latest movies from tmdb data", latestMovies);
 
-      movies.results = movies.results.sort(
-        (a, b) => b.popularity - a.popularity,
-      );
-
-      console.log(
-        "trendings from tmdb data arranged",
-        JSON.parse(JSON.stringify(movies)),
-      );
-
-      if (movies.results.length === 0) {
-        setError("No Movies To Show");
-        throw new Error("No movies found");
+      if (latestMovies.length === 0) {
+        setError("No Latest To Show");
+        throw new Error("No latest found");
       }
 
-      const [moviesGenresRes, tvGenresRes] = await Promise.allSettled([
-        fetchMovieGenres(),
-        fetchTVGenres(),
-      ]);
+      const moviesGenresRes = await fetchMovieGenres();
 
-      //   if (moviesGenresRes.status !== "fulfilled" || !moviesGenresRes.value.ok) {
-      //     setError("Error Loading Movies Genres!!!");
-      //   }
-
-      const tvGenres = (await tvGenresRes.value.json()).genres;
-      console.log("tv genres", tvGenres);
-
-      const moviesGenres = (await moviesGenresRes.value.json()).genres;
+      const moviesGenres = (await moviesGenresRes.json()).genres;
       console.log("movies genres", moviesGenres);
 
-      const allGenres = [...moviesGenres, ...tvGenres];
-      console.log("Combined genres", allGenres);
-
-      const TrendingsWithGenres = movies.results.map((trend) => {
-        const genres = trend.genre_ids.map((id) =>
-          allGenres.find((genre) => genre.id == id),
+      const latestMoviesWithGenres = latestMovies.results.map((latest) => {
+        const genres = latest.genre_ids.map((id) =>
+          moviesGenres.find((genre) => genre.id == id),
         );
 
-        return { ...trend, genres };
+        return { ...latest, genres };
       });
 
-      console.log("Trendings data with genres ", TrendingsWithGenres);
-      setTrendings(TrendingsWithGenres);
+      console.log("latest movies with genres ", latestMoviesWithGenres);
+      setLatestMovies(latestMoviesWithGenres);
     } catch (error) {
       // If there is an error, log it to the console
       setError("Error Loading Movies!!!");
@@ -92,7 +72,7 @@ const Trendings = () => {
   };
 
   useEffect(() => {
-    fetchMovies();
+    fetchLatest();
   }, [debouncedPageNumber]);
 
   const renderMovies = () => {
@@ -118,7 +98,7 @@ const Trendings = () => {
     }
     return (
       <div className="popular-movies grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {trendings.map((movie) => (
+        {latestMovies.map((movie) => (
           <MediaCard key={movie.id} media={movie} />
         ))}
       </div>
@@ -129,7 +109,7 @@ const Trendings = () => {
     <>
       <div className="popular mt-10 flex flex-col gap-10 p-8 sm:mt-15">
         <h2 className="font-dm-sans text-3xl leading-8 font-bold text-white">
-          Trendings
+          Latest Movies
         </h2>
         {renderMovies()}
       </div>
@@ -144,4 +124,4 @@ const Trendings = () => {
   );
 };
 
-export default Trendings;
+export default LatestMovies;
