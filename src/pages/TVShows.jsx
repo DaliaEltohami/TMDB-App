@@ -1,5 +1,6 @@
 import React from "react";
 import PopularTVShows from "../components/PopularTVShows";
+import LatestTVShows from "../components/LatestTVShows";
 
 const TVShows = () => {
   return (
@@ -8,6 +9,7 @@ const TVShows = () => {
         <span className="text-gradient">TV Shows</span>
       </h1>
       <PopularTVShows />
+      <LatestTVShows />
     </>
   );
 };

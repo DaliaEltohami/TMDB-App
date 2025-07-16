@@ -18,7 +18,7 @@ const MediaCard = ({ media }) => {
   };
   return (
     <div
-      className="media-card bg-dark-100 flex h-full min-h-[400px] flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white"
+      className="media-card bg-dark-100 flex h-full min-h-[400px] cursor-pointer flex-col gap-4 overflow-hidden rounded-2xl p-5 text-white"
       onClick={handleMediaNavigation}
     >
       <div

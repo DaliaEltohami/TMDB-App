@@ -28,8 +28,9 @@ export async function fetchLatestMovies(debouncedPageNumber) {
 }
 
 export async function fetchLatestTVShows(debouncedPageNumber) {
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
   const res = await fetch(
-    `${TMDB_MOVIES_API_URL}/tv/on_the_air?language=en-US&page=${debouncedPageNumber}`,
+    `${TMDB_MOVIES_API_URL}/discover/tv?sort_by=first_air_date.desc&first_air_date.lte=${today}&page=${debouncedPageNumber}`,
     API_OPTIONS,
   );
   return res;

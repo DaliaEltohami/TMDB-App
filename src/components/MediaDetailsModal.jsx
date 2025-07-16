@@ -42,9 +42,7 @@ const MediaDetailsModal = () => {
   const hours = media.runtime ? Math.floor(media.runtime / 60) : "";
   const minutes = media.runtime ? media.runtime % 60 : "";
 
-  const rating = media.voteAverage
-    ? Math.floor(media.voteAverage * 10) / 10
-    : "";
+  const rating = Math.floor(media.voteAverage * 10) / 10;
 
   const handleClose = () => {
     if (backgroundLocation) {

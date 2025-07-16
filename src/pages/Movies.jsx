@@ -1,4 +1,3 @@
-import TrendingSearchMovies from "../components/TrendingSearchMovies";
 import PopularMovies from "../components/PopularMovies";
 import LatestMovies from "../components/LatestMovies";
 
