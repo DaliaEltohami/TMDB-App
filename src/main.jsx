@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router";
 
 const root = document.getElementById("root");
 createRoot(root).render(
-  <BrowserRouter>
+  <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || "/TMDB-App"}>
     <App />
   </BrowserRouter>,
 );
