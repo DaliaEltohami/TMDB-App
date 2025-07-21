@@ -1,12 +1,7 @@
 import ReactDOM from "react-dom";
 import ratingIcon from "../assets/Rating.svg";
 import noPoster from "../assets/no-media.png";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearchParams,
-} from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import useMediaDetails from "../hooks/useMediaDetails";
 
 const MediaDetailsModal = () => {
@@ -42,7 +37,9 @@ const MediaDetailsModal = () => {
   const hours = media.runtime ? Math.floor(media.runtime / 60) : "";
   const minutes = media.runtime ? media.runtime % 60 : "";
 
-  const rating = Math.floor(media.voteAverage * 10) / 10;
+  const rating = media.voteAverage
+    ? Math.floor(media.voteAverage * 10) / 10
+    : "";
 
   const handleClose = () => {
     if (backgroundLocation) {
